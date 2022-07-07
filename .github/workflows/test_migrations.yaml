@@ -37,7 +37,7 @@ jobs:
           if [[ ${GITHUB_REF} == "refs/heads/production" ]]; then
             npx vercel --token ${VERCEL_TOKEN} --prod
           else
-            npx vercel --token ${VERCEL_TOKEN}
+            npx vercel --token ${VERCEL_TOKEN} --build-env DATABASE_URL=${{ env.BRANCH_URL }} --env DATABASE_URL=${{ env.BRANCH_URL }}
           fi
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
