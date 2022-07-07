@@ -18,12 +18,12 @@ jobs:
         run: |
           # create branch, and set BRANCH_NAME env variable
           echo 'BRANCH_NAME<<EOF' >> $GITHUB_ENV
-          curl -o - -X POST -H "Authorization: Bearer $API_TOKEN" https://console.stage.neon.tech/api/v1/projects/$PG_CLUSTER/branches | jq -r '.id' >> $GITHUB_ENV
+          curl -o - -X POST -H "Authorization: Bearer $API_TOKEN" https://console.neon.tech/api/v1/projects/$PG_CLUSTER/branches | jq -r '.id' >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
       - name: switch to branch
         run: |
-          echo "BRANCH_URL=postgres://$PG_CREDENTIALS@${{ env.BRANCH_NAME }}.cloud.stage.neon.tech/main" >> $GITHUB_ENV
+          echo "BRANCH_URL=postgres://$PG_CREDENTIALS@${{ env.BRANCH_NAME }}.cloud.neon.tech/main" >> $GITHUB_ENV
 
       - name: apply migration on branch
         run: |
