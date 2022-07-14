@@ -1,8 +1,3 @@
-if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
-  echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
-  exit 0
-fi
-
 if [ "$VERCEL_TOKEN" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
   exit 0
@@ -28,9 +23,9 @@ BRANCH_URL=$(postgres://$PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main)
 
 # We update DATABASE_URL using Vercel API
 curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID" \
--H 'Content-Type: application/json' \
--H "Authorization: Bearer $VERCEL_TOKEN" \
---data-raw '{
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $VERCEL_TOKEN" \
+  --data-raw '{
     "target": "preview",
     "gitBranch": "'$VERCEL_GIT_COMMIT_REF'",
     "type": "encrypted",
