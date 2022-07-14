@@ -8,13 +8,6 @@ if [ "$VERCEL_TOKEN" == "" ]; then
   exit 0
 fi
 
-# github access token is necessary
-# add it to Environment Variables on Vercel
-if [ "$GITHUB_ACCESS_TOKEN" == "" ]; then
-  echo "Error: GITHUB_ACCESS_TOKEN is empty"
-  exit 0
-fi
-
 # We only branch if it's not main
 if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
   exit 1
