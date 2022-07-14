@@ -1,5 +1,10 @@
-if [ "$VERCEL_TOKEN" == "" ]; then
+if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
+  exit 0
+fi
+
+if [ "$VERCEL_TOKEN" == "" ]; then
+  echo "Error: $VERCEL_TOKEN is empty"
   exit 0
 fi
 
