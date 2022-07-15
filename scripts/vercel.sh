@@ -1,8 +1,6 @@
-curl -sS https://webinstall.dev/jq | bash &> /dev/null
-jq=/vercel/.local/bin/jq
+# We don't have jq installed on the CI, so we use this script to get it temporarily.
+curl -sS https://webinstall.dev/jq | bash &>/dev/null
 export PATH=/vercel/.local/bin/:$PATH
-
-echo "jq: $(jq --version)"
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
@@ -54,7 +52,7 @@ if [ "$BRANCH_NAME" == "" ]; then
 fi
 
 # switch to branch
-BRANCH_URL=$(postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main)
+BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main")
 
 echo "calling... https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
 # We update DATABASE_URL using Vercel API
