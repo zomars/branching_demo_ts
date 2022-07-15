@@ -35,7 +35,7 @@ fi
 
 # We only branch if it's not main
 if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
-  exit 0
+  exit 1
 fi
 
 # create branch
