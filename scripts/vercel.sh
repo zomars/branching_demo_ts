@@ -1,4 +1,4 @@
-apt-get install jq
+curl -sS https://webinstall.dev/jq | bash
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
