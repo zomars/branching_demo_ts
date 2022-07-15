@@ -54,9 +54,14 @@ fi
 # switch to branch
 BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main")
 
-echo "calling... https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
+# Use this for personal projects
+VERCEL_PROJECT_ENDPOINT=$(echo "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env")
+# Use this for team projects
+# VERCEL_PROJECT_ENDPOINT=$(echo "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID")
+
+echo "calling... $VERCEL_PROJECT_ENDPOINT"
 # We update DATABASE_URL using Vercel API
-curl -sS -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env" \
+curl -sS -o - -X POST "$VERCEL_PROJECT_ENDPOINT" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $VERCEL_TOKEN" \
   --data-raw '{
@@ -72,3 +77,5 @@ if test "$res" != "0"; then
   echo "the curl command failed with: $res"
   exit 0
 fi
+
+exit 1
