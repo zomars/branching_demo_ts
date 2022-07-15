@@ -59,7 +59,7 @@ fi
 
 echo "calling... $VERCEL_PROJECT_ENDPOINT"
 # We update DATABASE_URL using Vercel API
-curl -sS -o - -X POST "$VERCEL_PROJECT_ENDPOINT" \
+curl -f -sS -o /dev/null -X POST "$VERCEL_PROJECT_ENDPOINT" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $VERCEL_TOKEN" \
   --data-raw '{
