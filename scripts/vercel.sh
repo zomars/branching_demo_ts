@@ -1,4 +1,6 @@
 curl -sS https://webinstall.dev/jq | bash 2>&1 >/dev/null
+jq=/vercel/.local/bin/jq
+echo which jq
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
