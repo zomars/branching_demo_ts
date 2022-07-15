@@ -43,7 +43,7 @@ if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
 fi
 
 # create branch
-BRANCH_NAME=$(curl -sS -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches | jq -r '.id')
+BRANCH_NAME=$(curl -sS -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches | jq -r '.id' 1>/dev/null)
 
 echo "Branch name: $BRANCH_NAME"
 
@@ -70,7 +70,8 @@ curl -sS -o - -X POST "$VERCEL_PROJECT_ENDPOINT" \
     "type": "encrypted",
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
-}'
+}' 1>/dev/null
+
 res=$?
 echo "res: $res"
 if test "$res" != "0"; then
