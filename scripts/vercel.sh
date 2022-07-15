@@ -1,20 +1,24 @@
+# We only branch if it's not main
+if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
+  exit 1
+fi
+
+# We don't have jq installed on the CI, so we use this script to get it temporarily.
+curl -sS https://webinstall.dev/jq | bash &>/dev/null
+export PATH=/vercel/.local/bin/:$PATH
+
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
   exit 0
 fi
 
 if [ "$VERCEL_TOKEN" == "" ]; then
-  echo "Error: $VERCEL_TOKEN is empty"
+  echo "Error: VERCEL_TOKEN is empty"
   exit 0
 fi
 
 if [ "$VERCEL_PROJECT_ID" == "" ]; then
   echo "Error: VERCEL_PROJECT_ID is empty"
-  exit 0
-fi
-
-if [ "$VERCEL_ORG_ID" == "" ]; then
-  echo "Error: VERCEL_ORG_ID is empty"
   exit 0
 fi
 
@@ -33,13 +37,8 @@ if [ "$NEON_API_TOKEN" == "" ]; then
   exit 0
 fi
 
-# We only branch if it's not main
-if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
-  exit 0
-fi
-
 # create branch
-BRANCH_NAME=$(curl -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches | jq -r '.id')
+BRANCH_NAME=$(curl -sS -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches 2>/dev/null | jq -r '.id')
 
 echo "Branch name: $BRANCH_NAME"
 
@@ -48,11 +47,19 @@ if [ "$BRANCH_NAME" == "" ]; then
 fi
 
 # switch to branch
-BRANCH_URL=$(postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main)
+BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main")
 
-echo "calling... https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
+if [ "$VERCEL_ORG_ID" == "" ]; then
+  # Use this for personal projects
+  VERCEL_PROJECT_ENDPOINT=$(echo "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env")
+else
+  # Use this for team projects
+  VERCEL_PROJECT_ENDPOINT=$(echo "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID")
+fi
+
+echo "calling... $VERCEL_PROJECT_ENDPOINT"
 # We update DATABASE_URL using Vercel API
-curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID" \
+curl -f -sS -o /dev/null -X POST "$VERCEL_PROJECT_ENDPOINT" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $VERCEL_TOKEN" \
   --data-raw '{
@@ -62,10 +69,11 @@ curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?tea
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
 }'
-
 res=$?
-echo "res: $res"
 if test "$res" != "0"; then
   echo "the curl command failed with: $res"
   exit 0
+else
+  echo "Successfully updated DATABASE_URL"
+  exit 1
 fi
