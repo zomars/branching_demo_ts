@@ -1,9 +1,4 @@
-git clone https://github.com/stedolan/jq.git
-cd jq
-autoreconf -i
-./configure --disable-maintainer-mode
-make
-make install
+apt-get install jq
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
   echo "Error: VERCEL_GIT_COMMIT_SHA is empty"
