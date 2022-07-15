@@ -55,3 +55,8 @@ curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?tea
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
 }'
+
+res=$?
+if test "$res" != "0"; then
+  echo "the curl command failed with: $res"
+fi
