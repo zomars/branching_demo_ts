@@ -1,7 +1,6 @@
-curl -sS https://webinstall.dev/jq | bash >>/dev/null
+curl -sS https://webinstall.dev/jq | bash &> /dev/null
 jq=/vercel/.local/bin/jq
-
-ls -ls /vercel/.local/bin/
+export PATH=/vercel/.local/bin/:$PATH
 
 echo "jq: $(jq --version)"
 
