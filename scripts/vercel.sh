@@ -68,7 +68,7 @@ curl -sS -o - -X POST "$VERCEL_PROJECT_ENDPOINT" \
     "type": "encrypted",
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
-}' 1>/dev/null
+}'
 
 res=$?
 if test "$res" != "0"; then
