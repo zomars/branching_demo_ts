@@ -56,7 +56,7 @@ BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/
 
 echo "calling... https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
 # We update DATABASE_URL using Vercel API
-curl -sS -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID" \
+curl -sS -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $VERCEL_TOKEN" \
   --data-raw '{
@@ -66,7 +66,6 @@ curl -sS -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
 }'
-
 res=$?
 echo "res: $res"
 if test "$res" != "0"; then
