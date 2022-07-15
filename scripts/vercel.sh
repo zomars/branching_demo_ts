@@ -59,4 +59,5 @@ curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?tea
 res=$?
 if test "$res" != "0"; then
   echo "the curl command failed with: $res"
+  exit 0
 fi
