@@ -8,6 +8,31 @@ if [ "$VERCEL_TOKEN" == "" ]; then
   exit 0
 fi
 
+if [ "$VERCEL_PROJECT_ID" == "" ]; then
+  echo "Error: VERCEL_PROJECT_ID is empty"
+  exit 0
+fi
+
+if [ "$VERCEL_ORG_ID" == "" ]; then
+  echo "Error: VERCEL_ORG_ID is empty"
+  exit 0
+fi
+
+if [ "$PG_CREDENTIALS" == "" ]; then
+  echo "Error: PG_CREDENTIALS is empty"
+  exit 0
+fi
+
+if [ "$PG_CLUSTER" == "" ]; then
+  echo "Error: PG_CLUSTER is empty"
+  exit 0
+fi
+
+if [ "$API_TOKEN" == "" ]; then
+  echo "Error: API_TOKEN is empty"
+  exit 0
+fi
+
 # We only branch if it's not main
 if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
   exit 1
