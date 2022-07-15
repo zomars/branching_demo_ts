@@ -43,7 +43,7 @@ if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
 fi
 
 # create branch
-BRANCH_NAME=$(curl -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches | jq -r '.id')
+BRANCH_NAME=$(curl -sS -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches | jq -r '.id')
 
 echo "Branch name: $BRANCH_NAME"
 
@@ -56,7 +56,7 @@ BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/
 
 echo "calling... https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
 # We update DATABASE_URL using Vercel API
-curl -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID" \
+curl -sS -o - -X POST "https://api.vercel.com/v1/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID" \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer $VERCEL_TOKEN" \
   --data-raw '{
