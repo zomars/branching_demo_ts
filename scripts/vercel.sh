@@ -69,11 +69,11 @@ curl -f -sS -o /dev/null -X POST "$VERCEL_PROJECT_ENDPOINT" \
     "key": "DATABASE_URL",
     "value": "'$BRANCH_URL'"
 }'
-
 res=$?
 if test "$res" != "0"; then
   echo "the curl command failed with: $res"
   exit 0
+else
+  echo "Successfully updated DATABASE_URL"
+  exit 1
 fi
-
-exit 1
