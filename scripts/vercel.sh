@@ -3,8 +3,8 @@ if [ "$VERCEL_GIT_COMMIT_REF" == "main" || "$VERCEL_GIT_COMMIT_REF" == "producti
   exit 1
 fi
 
-# We don't have jq installed on the CI, so we use this script to get it temporarily.
-curl -sS https://webinstall.dev/jq | bash &>/dev/null
+# We don't have snaplet installed on the CI, so we use this script to get it temporarily.
+curl -sL https://app.snaplet.dev/get-cli/ | bash &>/dev/null
 export PATH=/vercel/.local/bin/:$PATH
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
