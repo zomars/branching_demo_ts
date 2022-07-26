@@ -4,7 +4,7 @@ if [ "$VERCEL_GIT_COMMIT_REF" == "main" || "$VERCEL_GIT_COMMIT_REF" == "producti
 fi
 
 # We don't have snaplet installed on the CI, so we use this script to get it temporarily.
-curl -sL https://app.snaplet.dev/get-cli/ | bash -z /vercel/.local/bin/
+curl -sL https://app.snaplet.dev/get-cli/ | bash
 export PATH=/vercel/.local/bin/:$PATH
 
 if [ "$VERCEL_GIT_COMMIT_SHA" == "" ]; then
