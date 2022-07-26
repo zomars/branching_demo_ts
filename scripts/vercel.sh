@@ -32,6 +32,9 @@ if [ "$SNAPLET_PROJECT_ID" == "" ]; then
   exit 0
 fi
 
+# stop execution on error - don't let it build if something goes wrong
+set -e
+
 # Create new snaplet instant db for this branch
 snaplet db create --git --latest
 
