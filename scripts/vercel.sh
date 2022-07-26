@@ -1,5 +1,5 @@
 # We only branch if it's not main or production
-if [ "$VERCEL_GIT_COMMIT_REF" == "main" || "$VERCEL_GIT_COMMIT_REF" == "production" ]; then
+if [[ ("$VERCEL_GIT_COMMIT_REF" == "main") || ("$VERCEL_GIT_COMMIT_REF" == "production") ]]; then
   exit 1
 fi
 
