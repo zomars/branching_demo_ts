@@ -1,5 +1,5 @@
-# We only branch if it's not main
-if [ "$VERCEL_GIT_COMMIT_REF" == "main" ]; then
+# We only branch if it's not main or production
+if [ "$VERCEL_GIT_COMMIT_REF" == "main" || "$VERCEL_GIT_COMMIT_REF" == "production" ]; then
   exit 1
 fi
 
@@ -22,32 +22,26 @@ if [ "$VERCEL_PROJECT_ID" == "" ]; then
   exit 0
 fi
 
-if [ "$NEON_PG_CREDENTIALS" == "" ]; then
-  echo "Error: NEON_PG_CREDENTIALS is empty"
+if [ "$SNAPLET_ACCESS_TOKEN" == "" ]; then
+  echo "Error: SNAPLET_ACCESS_TOKEN is empty"
   exit 0
 fi
 
-if [ "$NEON_PG_CLUSTER" == "" ]; then
-  echo "Error: NEON_PG_CLUSTER is empty"
+if [ "$SNAPLET_DATABASE_ID" == "" ]; then
+  echo "Error: SNAPLET_DATABASE_ID is empty"
   exit 0
 fi
 
-if [ "$NEON_API_TOKEN" == "" ]; then
-  echo "Error: API_TOKEN is empty"
+# Create new snaplet instant db for this branch
+snaplet db create --git --latest
+
+# Save the new snaplet instant db url
+DATABASE_URL=$(snaplet db url --git)
+
+if [ "$DATABASE_URL" == "" ]; then
+  echo "Error: DATABASE_URL is empty"
   exit 0
 fi
-
-# create branch
-BRANCH_NAME=$(curl -sS -o - -X POST -H "Authorization: Bearer $NEON_API_TOKEN" https://console.neon.tech/api/v1/projects/$NEON_PG_CLUSTER/branches 2>/dev/null | jq -r '.id')
-
-echo "Branch name: $BRANCH_NAME"
-
-if [ "$BRANCH_NAME" == "" ]; then
-  exit 0
-fi
-
-# switch to branch
-BRANCH_URL=$(echo "postgres://$NEON_PG_CREDENTIALS@$BRANCH_NAME.cloud.neon.tech/main")
 
 if [ "$VERCEL_ORG_ID" == "" ]; then
   # Use this for personal projects
@@ -67,7 +61,7 @@ curl -f -sS -o /dev/null -X POST "$VERCEL_PROJECT_ENDPOINT" \
     "gitBranch": "'$VERCEL_GIT_COMMIT_REF'",
     "type": "encrypted",
     "key": "DATABASE_URL",
-    "value": "'$BRANCH_URL'"
+    "value": "'$DATABASE_URL'"
 }'
 res=$?
 if test "$res" != "0"; then
