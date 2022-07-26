@@ -27,8 +27,8 @@ if [ "$SNAPLET_ACCESS_TOKEN" == "" ]; then
   exit 0
 fi
 
-if [ "$SNAPLET_DATABASE_ID" == "" ]; then
-  echo "Error: SNAPLET_DATABASE_ID is empty"
+if [ "$SNAPLET_PROJECT_ID" == "" ]; then
+  echo "Error: SNAPLET_PROJECT_ID is empty"
   exit 0
 fi
 
